@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Keyword Extractor</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+      max-width: 900px;
+    }
+    textarea {
+      width: 100%;
+      height: 200px;
+      margin-bottom: 10px;
+    }
+    button {
+      padding: 10px 15px;
+      cursor: pointer;
+    }
+    #output {
+      margin-top: 15px;
+      padding: 10px;
+      background: #f3f3f3;
+      white-space: pre-wrap;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>Keyword Extractor</h2>
+
+  <textarea id="inputText" placeholder="Paste your text here..."></textarea>
+  <br>
+  <button onclick="extractKeywords()">Extract Keywords</button>
+
+  <h3>Output:</h3>
+  <div id="output"></div>
+
+  <script>
+    function extractKeywords() {
+      const text = document.getElementById("inputText").value.toLowerCase();
+
+      // Basic stop words list
+      const stopWords = new Set([
+        "the","and","a","an","to","of","in","is","it","that","this","on","for","with",
+        "as","was","were","be","by","are","at","or","from","but","not","they","you",
+        "i","we","he","she","them","his","her","their","our","us","so","if","into"
+      ]);
+
+      // Remove punctuation and split into words
+      const words = text
+        .replace(/[^a-z0-9\s]/g, " ")
+        .split(/\s+/)
+        .filter(word => word.length > 2 && !stopWords.has(word));
+
+      // Count frequency
+      const freq = {};
+      words.forEach(word => {
+        freq[word] = (freq[word] || 0) + 1;
+      });
+
+      // Sort by frequency (highest first)
+      const sorted = Object.entries(freq)
+        .sort((a, b) => b[1] - a[1])
+        .map(entry => entry[0]);
+
+      // Output as comma-separated string
+      const result = sorted.join(", ");
+
+      document.getElementById("output").textContent = result;
+    }
+  </script>
+
+</body>
+</html>
